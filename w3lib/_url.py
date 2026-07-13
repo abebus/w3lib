@@ -693,7 +693,12 @@ def _urlsplit(  # pylint: disable=too-many-locals,too-many-statements
             raise ValueError("Invalid IPv6 URL")
 
         netloc = url[2:delim]
-        if open_br_pos != -1 and closing_br_pos != -1:
+        open_in_netloc = 2 <= open_br_pos < delim
+        close_in_netloc = 2 <= closing_br_pos < delim
+
+        if open_in_netloc != close_in_netloc:
+            raise ValueError("Invalid IPv6 URL")
+        if open_in_netloc:
             _check_bracketed_netloc(netloc)
 
         url = url[delim:]
